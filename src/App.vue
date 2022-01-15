@@ -28,7 +28,7 @@
         target="_blank"
         text
       >
-        <span class="mr-2">Latest Release</span>
+        <span class="mr-2">{{message}}</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
@@ -49,6 +49,17 @@ export default Vue.extend({
   components: {
     HelloWorld,
   },
+  computed: {
+    message: {
+      get (): string {
+        return this.$store.getters.getAccessToken
+      }
+    }
+  },
+  // mounted() {
+  //   this.$store.dispatch("Authorize",
+  //       {code:'AQDHGFPjs2dUOtbdfB4-C6RH8wmcI0DgaxIotJbxLScR_VfoIWAn9dBPKZcaNQjnOkoyM1zF4x8P6f31sfhttu-BvBX47fgo00beA7hM5E11nL-QqOCZdGvBWWvcQyFLjV35nsB30VRZiNgFRCuw73SLlOoFPkmRU-uhuoVcIyg1IqQFM2ETVpBdzDy1k3gB1yZ3hf4xhtBIhKD4l-fd0es7CDshGfxjya1nYPeOm6bhOFwxXWjLA-5PKVRr-OSpKUKb7KiZYs5MaN0YIcma3hz9Zrp_FQXmjd21e1tNp4nfiPeZ6g'});
+  // },
 
   data: () => ({
     //
