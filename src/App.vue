@@ -39,10 +39,11 @@
   </v-app>
 </template>
 
-<script>
-import HelloWorld from "./components/HelloWorld";
+<script lang="ts">
+import Vue from "vue";
+import HelloWorld from "./components/HelloWorld.vue";
 
-export default {
+export default Vue.extend({
   name: "App",
 
   components: {
@@ -52,5 +53,5 @@ export default {
   data: () => ({
     //
   }),
-};
+});
 </script>
