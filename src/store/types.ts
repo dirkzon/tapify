@@ -1,3 +1,3 @@
 export interface RootState {
-    hello: string
+  hello: string;
 }
