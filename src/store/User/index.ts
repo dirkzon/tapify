@@ -5,16 +5,22 @@ import { getters } from "@/store/User/getters";
 import { mutations } from "@/store/User/mutations";
 import { actions } from "@/store/User/actions";
 
-const state: UserState = {
-  access_token: "",
-  expires_in: "",
-  refresh_token: "",
-  scope: "",
-  token_type: "",
+const initialState: UserState = {
+  profile: {
+    name: "",
+    image: "",
+    uri: "",
+    url: "",
+  },
+  auth: {
+    access_token: "",
+    expires_in: "",
+    refresh_token: "",
+  },
 };
 
 export const authModule: Module<UserState, RootState> = {
-  state,
+  state: initialState,
   getters,
   mutations,
   actions,
