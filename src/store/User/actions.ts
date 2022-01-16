@@ -18,23 +18,25 @@ export const actions: ActionTree<UserState, RootState> = {
       grant_type: "authorization_code",
     });
 
-    await axios
-      .post(VUE_APP_SPOTIFY_AUTH_URI + "/api/token", form, {
-        headers: {
-          Authorization: `Basic ${btoa(
-            `${VUE_APP_CLIENT_ID}:${VUE_APP_CLIENT_SECRET}`
-          )}`,
-          Accept: "application/json",
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
-      .catch((err) => {
-        console.log(err.response);
-        throw new Error(err.response);
-      })
-      .then((response) => {
-        state.commit("SET_AUTH", response.data);
-      });
+    if (state.state.auth.access_token !== "") {
+      await axios
+        .post(VUE_APP_SPOTIFY_AUTH_URI + "/api/token", form, {
+          headers: {
+            Authorization: `Basic ${btoa(
+              `${VUE_APP_CLIENT_ID}:${VUE_APP_CLIENT_SECRET}`
+            )}`,
+            Accept: "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        })
+        .catch((err) => {
+          console.log(err.response.data.error_descriptions);
+          throw new Error(err.response.data.error_description);
+        })
+        .then((response) => {
+          state.commit("SET_AUTH", response.data);
+        });
+    }
   },
 
   async FetchUserProfile(state) {
