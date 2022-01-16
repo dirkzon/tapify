@@ -19,7 +19,7 @@ const initialState: UserState = {
   },
 };
 
-export const authModule: Module<UserState, RootState> = {
+export const UserModule: Module<UserState, RootState> = {
   state: initialState,
   getters,
   mutations,

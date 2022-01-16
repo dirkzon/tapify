@@ -9,7 +9,6 @@ export const mutations: MutationTree<UserState> = {
   },
 
   SET_PROFILE(state, payload) {
-    console.log(payload);
     state.profile.name = payload.display_name;
     state.profile.url = payload.external_urls.spotify;
     state.profile.image = payload.images[0]?.url;
