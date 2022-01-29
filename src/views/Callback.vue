@@ -20,6 +20,7 @@ export default Vue.extend({
         });
       });
     await this.$store.dispatch("FetchUserProfile");
+    await this.$router.push("PlaylistSelect");
   },
 });
 </script>

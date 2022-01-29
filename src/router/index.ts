@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Landing from "../views/LandingPage.vue";
 import Error from "@/views/Error.vue";
+import PlaylistSelect from "@/views/PlaylistSelect.vue";
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,11 @@ const routes: Array<RouteConfig> = [
     path: "/Error",
     name: "ErrorPage",
     component: Error,
+  },
+  {
+    path: "/PlaylistSelect",
+    name: "PlaylistSelect",
+    component: PlaylistSelect,
   },
 ];
 
