@@ -8,6 +8,7 @@ const initialState: PlaylistState = {
   name: "",
   uri: "",
   url: "",
+  creator: "",
 };
 
 export const PlaylistModule: Module<PlaylistState, RootState> = {

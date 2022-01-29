@@ -3,4 +3,5 @@ export interface PlaylistState {
   url: string;
   image: string;
   uri: string;
+  creator: string;
 }

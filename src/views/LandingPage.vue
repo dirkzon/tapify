@@ -1,5 +1,5 @@
 <template>
-  <div class="landing">
+  <div class="landing" style="text-align: center">
     <h1>Tapify</h1>
     <v-btn elevation="2" @click="rout()"> log in with Spotify </v-btn>
   </div>

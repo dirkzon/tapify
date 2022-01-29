@@ -35,5 +35,6 @@ function mapPlaylist(playlist: any): PlaylistState {
     name: playlist.name,
     uri: playlist.uri,
     url: playlist.external_urls.spotify,
+    creator: playlist.owner.display_name,
   };
 }
