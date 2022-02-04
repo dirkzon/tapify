@@ -6,7 +6,7 @@ import { getters } from "@/store/Playlist/getters";
 const initialState: PlaylistState = {
   image: "",
   name: "",
-  uri: "",
+  id: "",
   url: "",
   creator: "",
 };
