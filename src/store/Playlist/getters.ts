@@ -33,7 +33,7 @@ function mapPlaylist(playlist: any): PlaylistState {
   return {
     image: playlist.images[0]?.url,
     name: playlist.name,
-    uri: playlist.uri,
+    id: playlist.id,
     url: playlist.external_urls.spotify,
     creator: playlist.owner.display_name,
   };

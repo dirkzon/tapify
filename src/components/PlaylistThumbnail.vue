@@ -1,5 +1,8 @@
 <template>
-  <v-card style="margin: 20px; width: 600px; border-radius: 20px" @click="bruh">
+  <v-card
+    style="margin: 20px; width: 600px; border-radius: 20px"
+    @click="selectPlaylist"
+  >
     <v-row style="margin: 1px">
       <v-col md="3">
         <v-avatar tile size="125" style="border-radius: 0">
@@ -25,8 +28,10 @@ export default Vue.extend({
   name: "PlaylistThumbnail",
   props: ["playlist"],
   methods: {
-    bruh() {
-      console.log(this.playlist.uri);
+    selectPlaylist() {
+      this.$router.push({
+        path: "cassette/" + this.playlist.id,
+      });
     },
   },
 });

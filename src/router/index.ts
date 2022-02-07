@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import Landing from "../views/LandingPage.vue";
 import Error from "@/views/Error.vue";
 import PlaylistSelect from "@/views/PlaylistSelect.vue";
+import Cassette from "@/views/Cassette.vue";
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,11 @@ const routes: Array<RouteConfig> = [
     path: "/PlaylistSelect",
     name: "PlaylistSelect",
     component: PlaylistSelect,
+  },
+  {
+    path: "/Cassette/:playlist_id",
+    name: "Cassette",
+    component: Cassette,
   },
 ];
 

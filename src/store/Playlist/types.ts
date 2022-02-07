@@ -2,6 +2,6 @@ export interface PlaylistState {
   name: string;
   url: string;
   image: string;
-  uri: string;
+  id: string;
   creator: string;
 }
