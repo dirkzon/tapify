@@ -12,15 +12,13 @@ export default Vue.extend({
   name: "landingPage",
   methods: {
     rout() {
-      const url = `${
-        process.env.VUE_APP_SPOTIFY_AUTH_URI
+      window.location.href = `${
+          process.env.VUE_APP_SPOTIFY_AUTH_URI
       }/authorize?response_type=code&client_id=${
-        process.env.VUE_APP_CLIENT_ID
+          process.env.VUE_APP_CLIENT_ID
       }&scope=${encodeURIComponent(
-        String(process.env.VUE_APP_SCOPE)
+          String(process.env.VUE_APP_SCOPE)
       )}&redirect_uri=${process.env.VUE_APP_REDIRECT_URL}`;
-      console.log(url);
-      window.location.href = url;
     },
   },
 });

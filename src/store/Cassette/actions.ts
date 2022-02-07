@@ -8,7 +8,6 @@ const { VUE_APP_SPOTIFY_ENDPOINT } = process.env;
 export const actions: ActionTree<CassetteState, RootState> = {
   async FillCassette({ commit, rootGetters }, payload): Promise<any> {
     let ids = "";
-    console.log(payload);
     await axios
       .get(VUE_APP_SPOTIFY_ENDPOINT + "/playlists/" + payload, {
         headers: {
@@ -22,14 +21,12 @@ export const actions: ActionTree<CassetteState, RootState> = {
       })
       .then((response: any) => {
         if (response) {
-          console.log(response);
           response.data.tracks.items.forEach((item: any) => {
             commit("ADD_TRACK", item.track);
             ids += item.track.id + ",";
           });
         }
       });
-    console.log(ids);
     await axios
       .get(VUE_APP_SPOTIFY_ENDPOINT + "/audio-features?ids=" + ids, {
         headers: {

@@ -3,6 +3,7 @@ import { RootState } from "@/store/types";
 import { Module } from "vuex";
 import { actions } from "@/store/Cassette/actions";
 import { mutations } from "@/store/Cassette/mutations";
+import { getters } from "@/store/Cassette/getters";
 
 const initialState: CassetteState = {
   a_side: [],
@@ -14,4 +15,5 @@ export const CassetteModule: Module<CassetteState, RootState> = {
   state: initialState,
   actions,
   mutations,
+  getters,
 };

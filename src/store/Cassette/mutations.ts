@@ -23,17 +23,14 @@ export const mutations: MutationTree<CassetteState> = {
     for (let i = 0; i < b_sorted.length; i++) {
       state.b_side[i] = b_sorted[i];
     }
-    console.log([a_sorted, b_sorted]);
   },
 
   SET_AUDIO_FEATURES(state, payload) {
     const a_index = state.a_side.findIndex((t) => t.id === payload.id);
-    console.log(a_index);
     if (a_index >= 0) {
       setTrackAudioFeatures(state.a_side[a_index], payload);
     } else {
       const b_index = state.b_side.findIndex((t) => t.id === payload.id);
-      console.log(b_index);
       if (b_index >= 0) {
         setTrackAudioFeatures(state.b_side[b_index], payload);
       }
