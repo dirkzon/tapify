@@ -10,6 +10,8 @@ export interface TrackState {
   image?: string;
   duration_ms: number;
   artists: string[];
+  locked: boolean;
+  hidden: boolean;
   danceability?: number;
   instrumentalness?: number;
   liveness?: number;

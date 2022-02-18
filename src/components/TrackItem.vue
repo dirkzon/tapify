@@ -4,7 +4,7 @@
     :style="{
       padding: '0px',
       width: '500px',
-      height: `${track.duration_ms / 2500}px`,
+      //height: `${track.duration_ms / 2500}px`,
     }"
   >
     <v-row style="margin: 1px">
@@ -25,6 +25,16 @@
           <h6>{{ artist }};</h6>
         </v-row>
       </v-col>
+      <v-col md="1">
+        <v-btn class="v-icon" icon small @click="hideTrack">
+          <v-icon small v-if="!track.hidden">mdi-delete</v-icon>
+          <v-icon small v-if="track.hidden">mdi-keyboard-return</v-icon>
+        </v-btn>
+        <v-btn class="v-icon" icon small @click="lockTrack">
+          <v-icon small v-if="!track.locked">mdi-lock-open</v-icon>
+          <v-icon small v-if="track.locked">mdi-lock</v-icon>
+        </v-btn>
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -36,6 +46,14 @@ export default Vue.extend({
   props: ["track"],
   mounted() {
     console.log(this.track.duration_ms);
+  },
+  methods: {
+    lockTrack() {
+      this.$store.commit("SET_LOCK", this.track.id);
+    },
+    hideTrack() {
+      this.$store.commit("SET_HIDDEN", this.track.id);
+    },
   },
 });
 </script>
