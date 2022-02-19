@@ -29,6 +29,7 @@ export const actions: ActionTree<CassetteState, RootState> = {
           });
         }
       });
+    commit("SORT_TRACKS");
     await axios
       .get(VUE_APP_SPOTIFY_ENDPOINT + "/audio-features?ids=" + ids, {
         headers: {
@@ -45,5 +46,16 @@ export const actions: ActionTree<CassetteState, RootState> = {
           commit("SET_AUDIO_FEATURES", item);
         });
       });
+    commit("SET_SIDES_DURATION");
+  },
+
+  SetTrackHidden({ commit }, payload) {
+    commit("SET_HIDDEN", payload);
+    commit("SORT_TRACKS");
+    commit("SET_SIDES_DURATION");
+  },
+
+  setTrackLocked({ commit }, payload) {
+    commit("SET_LOCK", payload);
   },
 };

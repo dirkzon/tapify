@@ -1,11 +1,11 @@
 import { MutationTree } from "vuex";
 import { CassetteState, TrackState } from "@/store/Cassette/types";
-import { sortTracks } from "@/store/Cassette/service";
+import { sortTracks, sumTracksDuration } from "@/store/Cassette/service";
 
 export const mutations: MutationTree<CassetteState> = {
   CLEAR_SIDES(state) {
-    state.a_side = [];
-    state.b_side = [];
+    state.a_side.tracks = [];
+    state.b_side.tracks = [];
   },
 
   ADD_TRACK(state, payload) {
@@ -21,13 +21,17 @@ export const mutations: MutationTree<CassetteState> = {
     payload.artists.forEach((a: any) => {
       newTrack.artists.push(a.name);
     });
-    const allTracks = state.a_side.concat(state.b_side);
-    allTracks.push(newTrack);
+    state.a_side.tracks.push(newTrack);
+  },
 
-    const [a_sorted, b_sorted] = sortTracks(allTracks);
+  SORT_TRACKS(state) {
+    const [a_sorted, b_sorted] = sortTracks(
+      state.a_side.tracks,
+      state.b_side.tracks
+    );
 
-    state.a_side = a_sorted;
-    state.b_side = b_sorted;
+    state.a_side.tracks = a_sorted;
+    state.b_side.tracks = b_sorted;
   },
 
   SET_HIDDEN(state, payload) {
@@ -48,16 +52,26 @@ export const mutations: MutationTree<CassetteState> = {
     const track = findTrack(state, payload);
     track.locked = !track.locked;
   },
+
+  SET_SIDES_DURATION(state) {
+    const aSum = sumTracksDuration(state.a_side.tracks);
+    state.a_side.total_duration = aSum;
+    state.a_side.exceeds_duration = aSum > state.max_duration / 2;
+
+    const bSum = sumTracksDuration(state.b_side.tracks);
+    state.b_side.total_duration = bSum;
+    state.b_side.exceeds_duration = bSum > state.max_duration / 2;
+  },
 };
 
 function findTrack(state: any, id: string): any {
-  const a_index = state.a_side.findIndex((t: any) => t.id === id);
+  const a_index = state.a_side.tracks.findIndex((t: any) => t.id === id);
   if (a_index >= 0) {
-    return state.a_side[a_index];
+    return state.a_side.tracks[a_index];
   } else {
-    const b_index = state.b_side.findIndex((t: any) => t.id === id);
+    const b_index = state.b_side.tracks.findIndex((t: any) => t.id === id);
     if (b_index >= 0) {
-      return state.b_side[b_index];
+      return state.b_side.tracks[b_index];
     }
   }
 }

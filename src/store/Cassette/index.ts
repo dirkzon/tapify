@@ -6,9 +6,17 @@ import { mutations } from "@/store/Cassette/mutations";
 import { getters } from "@/store/Cassette/getters";
 
 const initialState: CassetteState = {
-  a_side: [],
-  b_side: [],
-  total_duration_ms: 60 * 60000,
+  a_side: {
+    tracks: [],
+    total_duration: 0,
+    exceeds_duration: false,
+  },
+  b_side: {
+    tracks: [],
+    total_duration: 0,
+    exceeds_duration: false,
+  },
+  max_duration: 90 * 60000,
 };
 
 export const CassetteModule: Module<CassetteState, RootState> = {

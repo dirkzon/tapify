@@ -7,6 +7,10 @@ export const getters: GetterTree<CassetteState, RootState> = {
     return [state.a_side, state.b_side];
   },
 
+  getMaxDuration(state) {
+    return state.max_duration;
+  },
+
   getCassetteSide(state, side) {
     if (side === "a") {
       return state.a_side;
@@ -16,18 +20,17 @@ export const getters: GetterTree<CassetteState, RootState> = {
   },
 
   getTotalCassetteDuration(state) {
-    console.log("aaaaa");
-    return state.total_duration_ms;
+    return state.a_side.total_duration + state.b_side.total_duration;
   },
 
   getTrackById(state, id) {
-    const a_index = state.a_side.findIndex((t: any) => t.id === id);
+    const a_index = state.a_side.tracks.findIndex((t: any) => t.id === id);
     if (a_index >= 0) {
-      return state.a_side[a_index];
+      return state.a_side.tracks[a_index];
     } else {
-      const b_index = state.b_side.findIndex((t: any) => t.id === id);
+      const b_index = state.b_side.tracks.findIndex((t: any) => t.id === id);
       if (b_index >= 0) {
-        return state.b_side[b_index];
+        return state.b_side.tracks[b_index];
       }
     }
   },

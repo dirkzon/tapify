@@ -1,5 +1,6 @@
 <template>
-  <div
+  <v-card
+    :disabled="track.hidden"
     id="grad"
     :style="{
       padding: '0px',
@@ -7,7 +8,7 @@
       //height: `${track.duration_ms / 2500}px`,
     }"
   >
-    <v-row style="margin: 1px">
+    <v-row style="margin: 1px" :disabled="track.hidden">
       <v-col md="2">
         <v-avatar tile style="border-radius: 0; width: 60px; height: auto">
           <v-img :src="track.image"></v-img>
@@ -26,17 +27,23 @@
         </v-row>
       </v-col>
       <v-col md="1">
-        <v-btn class="v-icon" icon small @click="hideTrack">
+        <v-btn
+          :disabled="track.hidden"
+          class="v-icon"
+          icon
+          small
+          @click="hideTrack"
+        >
           <v-icon small v-if="!track.hidden">mdi-delete</v-icon>
-          <v-icon small v-if="track.hidden">mdi-keyboard-return</v-icon>
+          <v-icon small v-else>mdi-keyboard-return</v-icon>
         </v-btn>
         <v-btn class="v-icon" icon small @click="lockTrack">
           <v-icon small v-if="!track.locked">mdi-lock-open</v-icon>
-          <v-icon small v-if="track.locked">mdi-lock</v-icon>
+          <v-icon small v-else>mdi-lock</v-icon>
         </v-btn>
       </v-col>
     </v-row>
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -44,15 +51,12 @@ import Vue from "vue";
 export default Vue.extend({
   name: "TrackItem",
   props: ["track"],
-  mounted() {
-    console.log(this.track.duration_ms);
-  },
   methods: {
     lockTrack() {
-      this.$store.commit("SET_LOCK", this.track.id);
+      this.$store.dispatch("setTrackLocked", this.track.id);
     },
     hideTrack() {
-      this.$store.commit("SET_HIDDEN", this.track.id);
+      this.$store.dispatch("SetTrackHidden", this.track.id);
     },
   },
 });

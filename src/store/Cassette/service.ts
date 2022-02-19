@@ -1,8 +1,13 @@
 import { TrackState } from "@/store/Cassette/types";
 import _ from "lodash";
 
-export function sortTracks(tracks: TrackState[]): [TrackState[], TrackState[]] {
-  const durationSort = _.sortBy(tracks, ["duration_ms"]).reverse();
+export function sortTracks(
+  a: TrackState[],
+  b: TrackState[]
+): [TrackState[], TrackState[]] {
+  const concat = _.concat(getNonHiddenTracks(a), getNonHiddenTracks(b));
+
+  const durationSort = _.sortBy(concat, ["duration_ms"]).reverse();
   const a_side: TrackState[] = [];
   const b_side: TrackState[] = [];
 
@@ -32,9 +37,25 @@ export function sortTracks(tracks: TrackState[]): [TrackState[], TrackState[]] {
       }
     }
   }
-  return [a_side, b_side];
+  const a_w_hidden = _.concat(a_side, getHiddenTracks(a));
+  const b_w_hidden = _.concat(b_side, getHiddenTracks(b));
+  return [a_w_hidden, b_w_hidden];
+}
+
+function getNonHiddenTracks(tracks: TrackState[]) {
+  return _.filter(tracks, (t) => {
+    return !t.hidden;
+  });
+}
+
+function getHiddenTracks(tracks: TrackState[]) {
+  return _.filter(tracks, (t) => {
+    return t.hidden;
+  });
 }
 
 export function sumTracksDuration(tracks: TrackState[]) {
-  return tracks.reduce((sum: number, track) => sum + track.duration_ms, 0);
+  return _.sumBy(tracks, (t) => {
+    return t.hidden ? 0 : t.duration_ms;
+  });
 }
