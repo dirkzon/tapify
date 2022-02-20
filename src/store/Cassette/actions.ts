@@ -21,32 +21,34 @@ export const actions: ActionTree<CassetteState, RootState> = {
         console.log(err);
         throw new Error(err);
       })
-      .then((response: any) => {
+      .then(async (response: any) => {
         if (response) {
+          const trackBuffer: any[] = [];
           response.data.tracks.items.forEach((item: any) => {
-            commit("ADD_TRACK", item.track);
+            trackBuffer.push(item.track);
             ids += item.track.id + ",";
           });
+          commit("ADD_TRACKS", trackBuffer);
         }
+        await axios
+          .get(VUE_APP_SPOTIFY_ENDPOINT + "/audio-features?ids=" + ids, {
+            headers: {
+              Authorization: `Bearer ${rootGetters.getAccessToken}`,
+              Accept: "application/json",
+            },
+          })
+          .catch((err) => {
+            console.log(err);
+            throw new Error(err);
+          })
+          .then((response: any) => {
+            response.data.audio_features.forEach((item: any) => {
+              commit("SET_AUDIO_FEATURES", item);
+            });
+          });
+        commit("SORT_TRACKS");
+        commit("SET_SIDES_DURATION");
       });
-    commit("SORT_TRACKS");
-    await axios
-      .get(VUE_APP_SPOTIFY_ENDPOINT + "/audio-features?ids=" + ids, {
-        headers: {
-          Authorization: `Bearer ${rootGetters.getAccessToken}`,
-          Accept: "application/json",
-        },
-      })
-      .catch((err) => {
-        console.log(err);
-        throw new Error(err);
-      })
-      .then((response: any) => {
-        response.data.audio_features.forEach((item: any) => {
-          commit("SET_AUDIO_FEATURES", item);
-        });
-      });
-    commit("SET_SIDES_DURATION");
   },
 
   SetTrackHidden({ commit }, payload) {

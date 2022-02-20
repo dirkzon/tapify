@@ -59,3 +59,19 @@ export function sumTracksDuration(tracks: TrackState[]) {
     return t.hidden ? 0 : t.duration_ms;
   });
 }
+
+export function mapObjectToTrack(obj: any): TrackState {
+  const track: TrackState = {
+    id: obj.id,
+    artists: [],
+    duration_ms: obj.duration_ms,
+    name: obj.name,
+    image: obj.album.images[0]?.url,
+    locked: false,
+    hidden: false,
+  };
+  track.artists.forEach((a: any) => {
+    obj.artists.push(a.name);
+  });
+  return track;
+}

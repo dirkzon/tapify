@@ -1,6 +1,10 @@
 import { MutationTree } from "vuex";
 import { CassetteState, TrackState } from "@/store/Cassette/types";
-import { sortTracks, sumTracksDuration } from "@/store/Cassette/service";
+import {
+  mapObjectToTrack,
+  sortTracks,
+  sumTracksDuration,
+} from "@/store/Cassette/service";
 
 export const mutations: MutationTree<CassetteState> = {
   CLEAR_SIDES(state) {
@@ -8,20 +12,10 @@ export const mutations: MutationTree<CassetteState> = {
     state.b_side.tracks = [];
   },
 
-  ADD_TRACK(state, payload) {
-    const newTrack: TrackState = {
-      id: payload.id,
-      artists: [],
-      duration_ms: payload.duration_ms,
-      name: payload.name,
-      image: payload.album.images[0]?.url,
-      locked: false,
-      hidden: false,
-    };
-    payload.artists.forEach((a: any) => {
-      newTrack.artists.push(a.name);
+  ADD_TRACKS(state, payload) {
+    payload.forEach((obj: any) => {
+      state.a_side.tracks.push(mapObjectToTrack(obj));
     });
-    state.a_side.tracks.push(newTrack);
   },
 
   SORT_TRACKS(state) {
