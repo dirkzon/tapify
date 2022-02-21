@@ -34,8 +34,8 @@ export const mutations: MutationTree<CassetteState> = {
   },
 
   SET_HIDDEN(state, payload) {
-    const track = findTrack(state, payload);
-    track.hidden = !track.hidden;
+    const track = findTrack(state, payload.id);
+    track.hidden = payload.hidden;
   },
 
   SET_AUDIO_FEATURES(state, payload) {
@@ -60,6 +60,10 @@ export const mutations: MutationTree<CassetteState> = {
     const bSum = sumTracksDuration(state.b_side.tracks);
     state.b_side.total_duration = bSum;
     state.b_side.exceeds_duration = bSum > state.max_duration / 2;
+  },
+
+  SET_MAX_DURATION(state, payload) {
+    state.max_duration = payload * 60000;
   },
 };
 

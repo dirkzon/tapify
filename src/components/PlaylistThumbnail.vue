@@ -1,6 +1,7 @@
 <template>
   <v-card
-    style="margin: 20px; width: 600px; border-radius: 20px"
+    flat
+    style="width: 600px; border-radius: 20px"
     @click="selectPlaylist"
   >
     <v-row style="margin: 1px">
@@ -19,6 +20,7 @@
         </v-btn>
       </v-col>
     </v-row>
+    <v-divider></v-divider>
   </v-card>
 </template>
 

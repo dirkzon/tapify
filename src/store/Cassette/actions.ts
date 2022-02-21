@@ -51,9 +51,9 @@ export const actions: ActionTree<CassetteState, RootState> = {
       });
   },
 
-  SetTrackHidden({ commit }, payload) {
+  SetTrackHidden({ commit }, payload: { id: string; hidden: boolean }) {
     commit("SET_HIDDEN", payload);
-    commit("SET_LOCK", { id: payload, locked: false });
+    commit("SET_LOCK", { id: payload.id, locked: false });
     commit("SORT_TRACKS");
     commit("SET_SIDES_DURATION");
   },
@@ -70,5 +70,32 @@ export const actions: ActionTree<CassetteState, RootState> = {
     } else {
       commit("SET_CASSETTE", [state.a_side.tracks, payload.tracks]);
     }
+  },
+
+  setMaxDuration({ commit }, payload) {
+    commit("SET_MAX_DURATION", payload);
+    commit("SET_SIDES_DURATION");
+  },
+
+  unlockAllTracks({ commit, state }) {
+    state.a_side.tracks.forEach((t) =>
+      commit("SET_LOCK", { id: t.id, locked: false })
+    );
+    state.b_side.tracks.forEach((t) =>
+      commit("SET_LOCK", { id: t.id, locked: false })
+    );
+    commit("SORT_TRACKS");
+    commit("SET_SIDES_DURATION");
+  },
+
+  showAllTracks({ commit, state }) {
+    state.a_side.tracks.forEach((t) =>
+      commit("SET_HIDDEN", { id: t.id, hidden: false })
+    );
+    state.b_side.tracks.forEach((t) =>
+      commit("SET_HIDDEN", { id: t.id, hidden: false })
+    );
+    commit("SORT_TRACKS");
+    commit("SET_SIDES_DURATION");
   },
 };

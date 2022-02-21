@@ -62,7 +62,10 @@ export default Vue.extend({
       });
     },
     hideTrack() {
-      this.$store.dispatch("SetTrackHidden", this.track.id);
+      this.$store.dispatch("SetTrackHidden", {
+        id: this.track.id,
+        hidden: !this.track.hidden,
+      });
     },
   },
 });

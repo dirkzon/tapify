@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view />
+    <v-card flat style="height: 100%; width: 100%"><router-view /></v-card>
   </div>
 </template>
 
