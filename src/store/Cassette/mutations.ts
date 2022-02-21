@@ -1,5 +1,5 @@
 import { MutationTree } from "vuex";
-import { CassetteState, TrackState } from "@/store/Cassette/types";
+import { CassetteState } from "@/store/Cassette/types";
 import {
   mapObjectToTrack,
   sortTracks,
@@ -16,6 +16,11 @@ export const mutations: MutationTree<CassetteState> = {
     payload.forEach((obj: any) => {
       state.a_side.tracks.push(mapObjectToTrack(obj));
     });
+  },
+
+  SET_CASSETTE(state, payload) {
+    state.a_side.tracks = payload[0];
+    state.b_side.tracks = payload[1];
   },
 
   SORT_TRACKS(state) {
@@ -43,8 +48,8 @@ export const mutations: MutationTree<CassetteState> = {
   },
 
   SET_LOCK(state, payload) {
-    const track = findTrack(state, payload);
-    track.locked = !track.locked;
+    const track = findTrack(state, payload.id);
+    track.locked = payload.locked;
   },
 
   SET_SIDES_DURATION(state) {

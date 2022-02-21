@@ -5,52 +5,66 @@ export function sortTracks(
   a: TrackState[],
   b: TrackState[]
 ): [TrackState[], TrackState[]] {
-  const concat = _.concat(getNonHiddenTracks(a), getNonHiddenTracks(b));
+  const aSide: TrackState[] = [];
+  const bSide: TrackState[] = [];
+
+  const concat = _.concat(
+    getNonHiddenAndNonLockedTracks(a),
+    getNonHiddenAndNonLockedTracks(b)
+  );
 
   const durationSort = _.sortBy(concat, ["duration_ms"]).reverse();
-  const a_side: TrackState[] = [];
-  const b_side: TrackState[] = [];
 
-  for (let i = 0; i < durationSort.length; i += 2) {
-    if (i + 1 < durationSort.length) {
-      const k = durationSort[i];
-      const y = durationSort[i + 1];
+  durationSort.forEach((track: TrackState) => {
+    const aSum =
+      sumTracksDuration(aSide) +
+      sumTracksDuration(getLockedTracks(a)) +
+      track.duration_ms;
+    const bSum =
+      sumTracksDuration(bSide) +
+      sumTracksDuration(getLockedTracks(b)) +
+      track.duration_ms;
 
-      const a_sum = sumTracksDuration(a_side);
-      const b_sum = sumTracksDuration(b_side);
-
-      if (
-        a_sum + k.duration_ms - (b_sum + y.duration_ms) >
-        a_sum + y.duration_ms - (b_sum + k.duration_ms)
-      ) {
-        a_side.push(k);
-        b_side.push(y);
-      } else {
-        a_side.push(y);
-        b_side.push(k);
-      }
+    if (aSum < bSum) {
+      aSide.push(track);
     } else {
-      if (sumTracksDuration(a_side) > sumTracksDuration(b_side)) {
-        b_side.push(durationSort[i]);
-      } else {
-        a_side.push(durationSort[i]);
-      }
+      bSide.push(track);
+    }
+  });
+
+  for (let i = 0; i < a.length; i++) {
+    if (a[i].locked) {
+      aSide.splice(i, 0, a[i]);
     }
   }
-  const a_w_hidden = _.concat(a_side, getHiddenTracks(a));
-  const b_w_hidden = _.concat(b_side, getHiddenTracks(b));
-  return [a_w_hidden, b_w_hidden];
+
+  for (let i = 0; i < b.length; i++) {
+    if (b[i].locked) {
+      bSide.splice(i, 0, b[i]);
+    }
+  }
+
+  return [
+    _.concat(aSide, getHiddenTracks(a)),
+    _.concat(bSide, getHiddenTracks(b)),
+  ];
 }
 
-function getNonHiddenTracks(tracks: TrackState[]) {
+function getNonHiddenAndNonLockedTracks(tracks: TrackState[]) {
   return _.filter(tracks, (t) => {
-    return !t.hidden;
+    return !t.hidden && !t.locked;
   });
 }
 
 function getHiddenTracks(tracks: TrackState[]) {
   return _.filter(tracks, (t) => {
-    return t.hidden;
+    return t.hidden && !t.locked;
+  });
+}
+
+function getLockedTracks(tracks: TrackState[]) {
+  return _.filter(tracks, (t) => {
+    return !t.hidden && t.locked;
   });
 }
 
@@ -70,8 +84,8 @@ export function mapObjectToTrack(obj: any): TrackState {
     locked: false,
     hidden: false,
   };
-  track.artists.forEach((a: any) => {
-    obj.artists.push(a.name);
+  obj.artists.forEach((a: any) => {
+    track.artists.push(a.name);
   });
   return track;
 }

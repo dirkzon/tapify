@@ -1,5 +1,5 @@
 import { ActionTree } from "vuex";
-import { CassetteState } from "@/store/Cassette/types";
+import { CassetteState, TrackState } from "@/store/Cassette/types";
 import { RootState } from "@/store/types";
 import axios from "axios";
 
@@ -53,11 +53,22 @@ export const actions: ActionTree<CassetteState, RootState> = {
 
   SetTrackHidden({ commit }, payload) {
     commit("SET_HIDDEN", payload);
+    commit("SET_LOCK", { id: payload, locked: false });
     commit("SORT_TRACKS");
     commit("SET_SIDES_DURATION");
   },
 
-  setTrackLocked({ commit }, payload) {
+  setTrackLocked({ commit }, payload: { id: string; locked: boolean }) {
     commit("SET_LOCK", payload);
+    commit("SORT_TRACKS");
+    commit("SET_SIDES_DURATION");
+  },
+
+  moveTrack({ commit, state }, payload: { side: string; tracks: TrackState }) {
+    if (payload.side === "a") {
+      commit("SET_CASSETTE", [payload.tracks, state.b_side.tracks]);
+    } else {
+      commit("SET_CASSETTE", [state.a_side.tracks, payload.tracks]);
+    }
   },
 };
