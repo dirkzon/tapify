@@ -56,7 +56,10 @@ export default Vue.extend({
   props: ["track"],
   methods: {
     lockTrack() {
-      this.$store.dispatch("setTrackLocked", this.track.id);
+      this.$store.dispatch("setTrackLocked", {
+        id: this.track.id,
+        locked: !this.track.locked,
+      });
     },
     hideTrack() {
       this.$store.dispatch("SetTrackHidden", this.track.id);

@@ -3,8 +3,8 @@ import { CassetteState } from "@/store/Cassette/types";
 import { RootState } from "@/store/types";
 
 export const getters: GetterTree<CassetteState, RootState> = {
-  getCassetteSides(state) {
-    return [state.a_side, state.b_side];
+  getCassetteState(state) {
+    return state;
   },
 
   getMaxDuration(state) {

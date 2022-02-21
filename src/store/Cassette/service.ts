@@ -1,15 +1,20 @@
 import { TrackState } from "@/store/Cassette/types";
 import _ from "lodash";
 
+//locked tracks should also be taken into the sorting by duration thing
+
 export function sortTracks(
   a: TrackState[],
   b: TrackState[]
 ): [TrackState[], TrackState[]] {
-  const concat = _.concat(getNonHiddenTracks(a), getNonHiddenTracks(b));
+  const concat = _.concat(
+    getNonHiddenAndNonLockedTracks(a),
+    getNonHiddenAndNonLockedTracks(b)
+  );
 
   const durationSort = _.sortBy(concat, ["duration_ms"]).reverse();
-  const a_side: TrackState[] = [];
-  const b_side: TrackState[] = [];
+  const a_side: TrackState[] = getLockedTracks(a);
+  const b_side: TrackState[] = getLockedTracks(b);
 
   for (let i = 0; i < durationSort.length; i += 2) {
     if (i + 1 < durationSort.length) {
@@ -42,15 +47,21 @@ export function sortTracks(
   return [a_w_hidden, b_w_hidden];
 }
 
-function getNonHiddenTracks(tracks: TrackState[]) {
+function getNonHiddenAndNonLockedTracks(tracks: TrackState[]) {
   return _.filter(tracks, (t) => {
-    return !t.hidden;
+    return !t.hidden && !t.locked;
   });
 }
 
 function getHiddenTracks(tracks: TrackState[]) {
   return _.filter(tracks, (t) => {
-    return t.hidden;
+    return t.hidden && !t.locked;
+  });
+}
+
+function getLockedTracks(tracks: TrackState[]) {
+  return _.filter(tracks, (t) => {
+    return !t.hidden && t.locked;
   });
 }
 
