@@ -1,6 +1,23 @@
 <template>
   <div data-app>
     <v-card style="width: fit-content; padding: 20px">
+      <v-row>
+        <v-col>
+          <div style="padding: 5px">
+            <v-btn
+              title="Add side"
+              class="v-icon"
+              outlined
+              fab
+              small
+              @click="addSide"
+              style="margin: 5px"
+            >
+              <v-icon>mdi-playlist-add</v-icon>
+            </v-btn>
+          </div>
+        </v-col>
+      </v-row>
       <!--        <v-col>-->
       <!--          <v-select-->
       <!--            outlined-->
@@ -36,6 +53,11 @@ export default Vue.extend({
   computed: {
     sidesCount() {
       return this.$store.getters.countCassetteSides;
+    },
+  },
+  methods: {
+    addSide: function () {
+      this.$store.dispatch("addSide");
     },
   },
 });

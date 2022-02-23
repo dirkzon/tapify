@@ -60,7 +60,6 @@ export const actions: ActionTree<CassetteState, RootState> = {
   },
 
   setTrackLocked({ commit }, payload: { id: string; locked: boolean }) {
-    console.log("lock");
     commit("SET_LOCK", payload);
     commit("SORT_TRACKS");
     commit("SET_SIDES_DURATION");
@@ -74,6 +73,12 @@ export const actions: ActionTree<CassetteState, RootState> = {
     state.sides.forEach((s) => sides.push(s.tracks));
     sides[payload.index] = payload.tracks;
     commit("SET_CASSETTE", sides);
+  },
+
+  addSide({ commit }) {
+    commit("ADD_SIDE");
+    commit("SORT_TRACKS");
+    commit("SET_SIDES_DURATION");
   },
 
   setMaxDuration({ commit }, payload) {

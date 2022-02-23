@@ -18,6 +18,13 @@ export const mutations: MutationTree<CassetteState> = {
     Vue.set(state.sides, 0, { ...state.sides[0], tracks: payload });
   },
 
+  ADD_SIDE(state) {
+    Vue.set(state.sides, state.sides.length, {
+      tracks: [],
+      total_duration: 0,
+    });
+  },
+
   SET_CASSETTE(state, payload) {
     for (let i = 0; i < state.sides.length; i++) {
       Vue.set(state.sides, i, { ...state.sides[0], tracks: payload[i] });

@@ -54,7 +54,6 @@ export default Vue.extend({
         return this.$store.getters.getCassetteSideTracks(this.index).tracks;
       },
       set(value) {
-        console.log(value);
         return this.$store.dispatch("moveTrack", {
           index: this.index,
           tracks: value,
