@@ -1,14 +1,56 @@
 <template>
   <div>
     <v-card style="margin: 20px" flat>
-      <v-card-title>
-        {{ new Date(this.duration).getMinutes() }}:{{
-          new Date(this.duration).getSeconds().toString().padStart(2, "0")
-        }}
-      </v-card-title>
-      <v-card-subtitle
-        >{{ String.fromCharCode(97 + index) }}-side</v-card-subtitle
-      >
+      <v-row>
+        <v-col>
+          <v-card-title>
+            {{ new Date(this.duration).getMinutes() }}:{{
+              new Date(this.duration).getSeconds().toString().padStart(2, "0")
+            }}
+          </v-card-title>
+          <v-card-subtitle
+            >{{ String.fromCharCode(97 + index) }}-side</v-card-subtitle
+          >
+        </v-col>
+        <v-col text-align="right">
+          <v-menu>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="v-icon"
+                icon
+                style="margin: 25px"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>mdi-more-vert</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-btn text small @click="unhideSide">
+                  <v-icon small>mdi-undo</v-icon> unhide tracks
+                </v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn text small @click="lockSide">
+                  <v-icon small>mdi-lock</v-icon> lock tracks
+                </v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn text small @click="unlockSide">
+                  <v-icon small>mdi-lock-open</v-icon> unlock tracks
+                </v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn text small @click="deleteSide">
+                  <v-icon small>mdi-delete</v-icon> delete tracks
+                </v-btn>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-col>
+      </v-row>
+
       <v-divider></v-divider>
       <draggable
         @change="setLock"
@@ -48,6 +90,9 @@ export default Vue.extend({
     TrackItem,
   },
   props: ["index"],
+  data: () => ({
+    closeOnClick: true,
+  }),
   computed: {
     tracks: {
       get() {
@@ -84,6 +129,27 @@ export default Vue.extend({
           locked: true,
         });
       }
+    },
+    unlockSide: function () {
+      this.$store.dispatch("setSideLock", {
+        index: this.index,
+        locked: false,
+      });
+    },
+    lockSide: function () {
+      this.$store.dispatch("setSideLock", {
+        index: this.index,
+        locked: true,
+      });
+    },
+    unhideSide: function () {
+      this.$store.dispatch("setSideHidden", {
+        index: this.index,
+        hidden: false,
+      });
+    },
+    deleteSide: function () {
+      this.$store.dispatch("deleteSide", this.index);
     },
   },
 });

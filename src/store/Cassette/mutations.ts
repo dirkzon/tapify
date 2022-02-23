@@ -6,6 +6,7 @@ import {
   findTrack,
 } from "@/store/Cassette/service";
 import Vue from "vue";
+import _ from "lodash";
 
 export const mutations: MutationTree<CassetteState> = {
   CLEAR_SIDES(state) {
@@ -67,5 +68,14 @@ export const mutations: MutationTree<CassetteState> = {
     state.sides.forEach((s) => {
       s.total_duration = sumTracksDuration(s.tracks);
     });
+  },
+
+  DELETE_SIDE(state, payload) {
+    const appendedTracks = _.concat(
+      state.sides[0].tracks,
+      state.sides[payload].tracks
+    );
+    Vue.set(state.sides, 0, { ...state.sides[0], tracks: appendedTracks });
+    Vue.delete(state.sides, payload);
   },
 };

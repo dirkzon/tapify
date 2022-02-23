@@ -86,21 +86,30 @@ export const actions: ActionTree<CassetteState, RootState> = {
     commit("SET_SIDES_DURATION");
   },
 
-  unlockAllTracks({ commit, state }) {
-    state.sides.forEach((s) => {
-      s.tracks.forEach((t) => commit("SET_LOCK", { id: t.id, locked: false }));
+  setSideLock({ commit, state }, payload: { index: number; locked: boolean }) {
+    state.sides[payload.index].tracks.forEach((t) => {
+      commit("SET_LOCK", { id: t.id, locked: payload.locked });
     });
     commit("SORT_TRACKS");
     commit("SET_SIDES_DURATION");
   },
 
-  showAllTracks({ commit, state }) {
-    state.sides.forEach((s) => {
-      s.tracks.forEach((t) =>
-        commit("SET_HIDDEN", { id: t.id, hidden: false })
-      );
+  setSideHidden(
+    { commit, state },
+    payload: { index: number; hidden: boolean }
+  ) {
+    state.sides[payload.index].tracks.forEach((t) => {
+      commit("SET_HIDDEN", { id: t.id, hidden: payload.hidden });
     });
     commit("SORT_TRACKS");
     commit("SET_SIDES_DURATION");
+  },
+
+  deleteSide({ commit }, payload) {
+    if (payload > 0) {
+      commit("DELETE_SIDE", payload);
+      commit("SORT_TRACKS");
+      commit("SET_SIDES_DURATION");
+    }
   },
 };
