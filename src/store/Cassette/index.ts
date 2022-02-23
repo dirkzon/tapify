@@ -6,16 +6,16 @@ import { mutations } from "@/store/Cassette/mutations";
 import { getters } from "@/store/Cassette/getters";
 
 const initialState: CassetteState = {
-  a_side: {
-    tracks: [],
-    total_duration: 0,
-    exceeds_duration: false,
-  },
-  b_side: {
-    tracks: [],
-    total_duration: 0,
-    exceeds_duration: false,
-  },
+  sides: [
+    {
+      tracks: [],
+      total_duration: 0,
+    },
+    {
+      tracks: [],
+      total_duration: 0,
+    },
+  ],
   max_duration: 90 * 60000,
 };
 

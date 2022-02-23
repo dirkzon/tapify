@@ -72,7 +72,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-#grad {
-  background: linear-gradient(to right, #1db954 0%, transparent 0%);
-}
+/*#grad {*/
+/*  background: linear-gradient(to right, #1db954 0%, transparent 0%);*/
+/*}*/
 </style>
