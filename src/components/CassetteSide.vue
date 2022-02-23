@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card style="margin: 20px" flat>
+    <v-card style="margin: 20px; width: fit-content" flat outlined>
       <v-row>
         <v-col>
           <v-card-title>
@@ -12,10 +12,11 @@
             >{{ String.fromCharCode(97 + index) }}-side</v-card-subtitle
           >
         </v-col>
-        <v-col text-align="right">
+        <v-col align="right">
           <v-menu>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
+                outlined
                 class="v-icon"
                 icon
                 style="margin: 25px"
@@ -43,7 +44,7 @@
               </v-list-item>
               <v-list-item>
                 <v-btn text small @click="deleteSide">
-                  <v-icon small>mdi-delete</v-icon> delete tracks
+                  <v-icon small>mdi-delete</v-icon> delete side
                 </v-btn>
               </v-list-item>
             </v-list>
@@ -51,22 +52,26 @@
         </v-col>
       </v-row>
 
-      <v-divider></v-divider>
       <draggable
         @change="setLock"
         group="tracks"
         v-model="tracks"
         class="list-group"
+        v-bind="dragOptions"
       >
-        <v-col
-          style="padding: 2px"
-          class="list-group-item"
-          :key="track.id"
-          v-for="track in tracks"
-        >
-          <TrackItem v-bind:track="track"></TrackItem>
-          <v-divider></v-divider>
-        </v-col>
+        <transition-group type="transition" :name="!drag ? 'flip-list' : null">
+          <v-col
+            style="padding: 2px"
+            class="list-group-item"
+            :key="track.id"
+            v-for="track in tracks"
+          >
+            <TrackItem v-bind:track="track"></TrackItem>
+            <v-divider
+              style="margin-right: 10px; margin-left: 10px"
+            ></v-divider>
+          </v-col>
+        </transition-group>
       </draggable>
       <v-skeleton-loader
         v-if="tracks.length === 0"
@@ -91,7 +96,8 @@ export default Vue.extend({
   },
   props: ["index"],
   data: () => ({
-    closeOnClick: true,
+    closeOn: true,
+    drag: false,
   }),
   computed: {
     tracks: {
@@ -107,6 +113,13 @@ export default Vue.extend({
     },
     duration() {
       return this.$store.getters.getCassetteSideDuration(this.index);
+    },
+    dragOptions() {
+      return {
+        animation: 150,
+        group: "tracks",
+        disabled: false,
+      };
     },
   },
   methods: {

@@ -8,7 +8,7 @@ const { VUE_APP_SPOTIFY_ENDPOINT } = process.env;
 
 export const actions: ActionTree<CassetteState, RootState> = {
   async FillCassette({ commit, rootGetters }, payload): Promise<any> {
-    commit("CLEAR_SIDES");
+    commit("RESET_SIDES");
 
     let ids = "";
     await axios

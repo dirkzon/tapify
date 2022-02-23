@@ -9,10 +9,12 @@ import Vue from "vue";
 import _ from "lodash";
 
 export const mutations: MutationTree<CassetteState> = {
-  CLEAR_SIDES(state) {
-    state.sides.forEach((s) => {
-      s.tracks = [];
-    });
+  RESET_SIDES(state) {
+    for (let i = 0; i < state.sides.length; i++) {
+      Vue.delete(state.sides, i);
+    }
+    Vue.set(state.sides, 0, { ...state.sides[0], tracks: [] });
+    Vue.set(state.sides, 1, { ...state.sides[1], tracks: [] });
   },
 
   ADD_TRACKS(state, payload: TrackState[]) {
