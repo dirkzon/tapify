@@ -7,13 +7,12 @@
             <v-btn
               title="Add side"
               class="v-icon"
-              outlined
-              fab
-              small
+              icon
+              large
               @click="addSide"
-              style="margin: 5px"
+              style="margin: 20px"
             >
-              <v-icon>mdi-playlist-add</v-icon>
+              <v-icon large>mdi-playlist-plus</v-icon>
             </v-btn>
           </div>
         </v-col>

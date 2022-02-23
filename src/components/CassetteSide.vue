@@ -16,14 +16,13 @@
           <v-menu>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                outlined
                 class="v-icon"
                 icon
                 style="margin: 25px"
                 v-bind="attrs"
                 v-on="on"
               >
-                <v-icon>mdi-more-vert</v-icon>
+                <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -51,7 +50,6 @@
           </v-menu>
         </v-col>
       </v-row>
-
       <draggable
         @change="setLock"
         group="tracks"
