@@ -7,11 +7,19 @@ export const getters: GetterTree<CassetteState, RootState> = {
     return state;
   },
 
-  getMaxDuration(state) {
-    return state.max_duration;
+  getCassetteSideTracks: (state) => (index: number) => {
+    return state.sides[index];
   },
 
-  getTotalCassetteDuration(state) {
-    return state.a_side.total_duration + state.b_side.total_duration;
+  getCassetteSideDuration: (state) => (index: number) => {
+    return state.sides[index].total_duration;
+  },
+
+  countCassetteSides(state) {
+    return state.sides.length;
+  },
+
+  getMaxDuration(state) {
+    return state.max_duration;
   },
 };

@@ -1,36 +1,40 @@
 import { MutationTree } from "vuex";
-import { CassetteState } from "@/store/Cassette/types";
+import { CassetteState, TrackState } from "@/store/Cassette/types";
 import {
-  mapObjectToTrack,
   sortTracks,
   sumTracksDuration,
+  findTrack,
 } from "@/store/Cassette/service";
+import Vue from "vue";
 
 export const mutations: MutationTree<CassetteState> = {
   CLEAR_SIDES(state) {
-    state.a_side.tracks = [];
-    state.b_side.tracks = [];
-  },
-
-  ADD_TRACKS(state, payload) {
-    payload.forEach((obj: any) => {
-      state.a_side.tracks.push(mapObjectToTrack(obj));
+    state.sides.forEach((s) => {
+      s.tracks = [];
     });
   },
 
+  ADD_TRACKS(state, payload: TrackState[]) {
+    Vue.set(state.sides, 0, { ...state.sides[0], tracks: payload });
+  },
+
   SET_CASSETTE(state, payload) {
-    state.a_side.tracks = payload[0];
-    state.b_side.tracks = payload[1];
+    for (let i = 0; i < state.sides.length; i++) {
+      Vue.set(state.sides, i, { ...state.sides[0], tracks: payload[i] });
+    }
   },
 
   SORT_TRACKS(state) {
-    const [a_sorted, b_sorted] = sortTracks(
-      state.a_side.tracks,
-      state.b_side.tracks
-    );
+    const test: TrackState[][] = [];
+    for (let i = 0; i < state.sides.length; i++) {
+      test.push(state.sides[i].tracks);
+    }
 
-    state.a_side.tracks = a_sorted;
-    state.b_side.tracks = b_sorted;
+    const sortedSides = sortTracks(test);
+
+    for (let i = 0; i < sortedSides.length; i++) {
+      Vue.set(state.sides, i, { ...state.sides[0], tracks: sortedSides[i] });
+    }
   },
 
   SET_HIDDEN(state, payload) {
@@ -53,28 +57,8 @@ export const mutations: MutationTree<CassetteState> = {
   },
 
   SET_SIDES_DURATION(state) {
-    const aSum = sumTracksDuration(state.a_side.tracks);
-    state.a_side.total_duration = aSum;
-    state.a_side.exceeds_duration = aSum > state.max_duration / 2;
-
-    const bSum = sumTracksDuration(state.b_side.tracks);
-    state.b_side.total_duration = bSum;
-    state.b_side.exceeds_duration = bSum > state.max_duration / 2;
-  },
-
-  SET_MAX_DURATION(state, payload) {
-    state.max_duration = payload * 60000;
+    state.sides.forEach((s) => {
+      s.total_duration = sumTracksDuration(s.tracks);
+    });
   },
 };
-
-function findTrack(state: any, id: string): any {
-  const a_index = state.a_side.tracks.findIndex((t: any) => t.id === id);
-  if (a_index >= 0) {
-    return state.a_side.tracks[a_index];
-  } else {
-    const b_index = state.b_side.tracks.findIndex((t: any) => t.id === id);
-    if (b_index >= 0) {
-      return state.b_side.tracks[b_index];
-    }
-  }
-}

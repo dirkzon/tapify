@@ -1,13 +1,11 @@
 export interface CassetteState {
-  a_side: CassetteSide;
-  b_side: CassetteSide;
+  sides: CassetteSide[];
   max_duration: number;
 }
 
 export interface CassetteSide {
   tracks: TrackState[];
   total_duration: number;
-  exceeds_duration: boolean;
 }
 
 export interface TrackState {

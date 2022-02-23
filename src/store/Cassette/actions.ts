@@ -2,6 +2,7 @@ import { ActionTree } from "vuex";
 import { CassetteState, TrackState } from "@/store/Cassette/types";
 import { RootState } from "@/store/types";
 import axios from "axios";
+import { mapObjectToTrack } from "@/store/Cassette/service";
 
 const { VUE_APP_SPOTIFY_ENDPOINT } = process.env;
 
@@ -23,9 +24,9 @@ export const actions: ActionTree<CassetteState, RootState> = {
       })
       .then(async (response: any) => {
         if (response) {
-          const trackBuffer: any[] = [];
+          const trackBuffer: TrackState[] = [];
           response.data.tracks.items.forEach((item: any) => {
-            trackBuffer.push(item.track);
+            trackBuffer.push(mapObjectToTrack(item.track));
             ids += item.track.id + ",";
           });
           commit("ADD_TRACKS", trackBuffer);
@@ -59,17 +60,20 @@ export const actions: ActionTree<CassetteState, RootState> = {
   },
 
   setTrackLocked({ commit }, payload: { id: string; locked: boolean }) {
+    console.log("lock");
     commit("SET_LOCK", payload);
     commit("SORT_TRACKS");
     commit("SET_SIDES_DURATION");
   },
 
-  moveTrack({ commit, state }, payload: { side: string; tracks: TrackState }) {
-    if (payload.side === "a") {
-      commit("SET_CASSETTE", [payload.tracks, state.b_side.tracks]);
-    } else {
-      commit("SET_CASSETTE", [state.a_side.tracks, payload.tracks]);
-    }
+  moveTrack(
+    { commit, state },
+    payload: { index: number; tracks: TrackState[] }
+  ) {
+    const sides: TrackState[][] = [];
+    state.sides.forEach((s) => sides.push(s.tracks));
+    sides[payload.index] = payload.tracks;
+    commit("SET_CASSETTE", sides);
   },
 
   setMaxDuration({ commit }, payload) {
@@ -78,23 +82,19 @@ export const actions: ActionTree<CassetteState, RootState> = {
   },
 
   unlockAllTracks({ commit, state }) {
-    state.a_side.tracks.forEach((t) =>
-      commit("SET_LOCK", { id: t.id, locked: false })
-    );
-    state.b_side.tracks.forEach((t) =>
-      commit("SET_LOCK", { id: t.id, locked: false })
-    );
+    state.sides.forEach((s) => {
+      s.tracks.forEach((t) => commit("SET_LOCK", { id: t.id, locked: false }));
+    });
     commit("SORT_TRACKS");
     commit("SET_SIDES_DURATION");
   },
 
   showAllTracks({ commit, state }) {
-    state.a_side.tracks.forEach((t) =>
-      commit("SET_HIDDEN", { id: t.id, hidden: false })
-    );
-    state.b_side.tracks.forEach((t) =>
-      commit("SET_HIDDEN", { id: t.id, hidden: false })
-    );
+    state.sides.forEach((s) => {
+      s.tracks.forEach((t) =>
+        commit("SET_HIDDEN", { id: t.id, hidden: false })
+      );
+    });
     commit("SORT_TRACKS");
     commit("SET_SIDES_DURATION");
   },

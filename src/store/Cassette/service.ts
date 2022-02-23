@@ -1,53 +1,52 @@
 import { TrackState } from "@/store/Cassette/types";
 import _ from "lodash";
 
-export function sortTracks(
-  a: TrackState[],
-  b: TrackState[]
-): [TrackState[], TrackState[]] {
-  const aSide: TrackState[] = [];
-  const bSide: TrackState[] = [];
+export function sortTracks(input: TrackState[][]): TrackState[][] {
+  const sides: TrackState[][] = [];
 
-  const concat = _.concat(
-    getNonHiddenAndNonLockedTracks(a),
-    getNonHiddenAndNonLockedTracks(b)
-  );
+  input.forEach(() => {
+    sides.push([]);
+  });
+
+  let concat: TrackState[] = [];
+  input.forEach((tracks) => {
+    concat = _.concat(concat, getNonHiddenAndNonLockedTracks(tracks));
+  });
 
   const durationSort = _.sortBy(concat, ["duration_ms"]).reverse();
 
   durationSort.forEach((track: TrackState) => {
-    const aSum =
-      sumTracksDuration(aSide) +
-      sumTracksDuration(getLockedTracks(a)) +
+    const sum1 =
+      sumTracksDuration(sides[0]) +
+      sumTracksDuration(getLockedTracks(input[0])) +
       track.duration_ms;
-    const bSum =
-      sumTracksDuration(bSide) +
-      sumTracksDuration(getLockedTracks(b)) +
-      track.duration_ms;
-
-    if (aSum < bSum) {
-      aSide.push(track);
-    } else {
-      bSide.push(track);
+    const smallestSide = { index: 0, length: sum1 };
+    for (let i = 1; i < sides.length; i++) {
+      const sum =
+        sumTracksDuration(sides[i]) +
+        sumTracksDuration(getLockedTracks(input[i])) +
+        track.duration_ms;
+      if (sum < smallestSide.length) {
+        smallestSide.index = i;
+        smallestSide.length = sum;
+      }
     }
+    sides[smallestSide.index].push(track);
   });
 
-  for (let i = 0; i < a.length; i++) {
-    if (a[i].locked) {
-      aSide.splice(i, 0, a[i]);
+  for (let i = 0; i < input.length; i++) {
+    for (let j = 0; j < input[i].length; j++) {
+      if (input[i][j].locked) {
+        sides[i].splice(j, 0, input[i][j]);
+      }
     }
   }
 
-  for (let i = 0; i < b.length; i++) {
-    if (b[i].locked) {
-      bSide.splice(i, 0, b[i]);
-    }
+  for (let i = 0; i < sides.length; i++) {
+    sides[i] = _.concat(sides[i], getHiddenTracks(input[i]));
   }
 
-  return [
-    _.concat(aSide, getHiddenTracks(a)),
-    _.concat(bSide, getHiddenTracks(b)),
-  ];
+  return sides;
 }
 
 function getNonHiddenAndNonLockedTracks(tracks: TrackState[]) {
@@ -88,4 +87,15 @@ export function mapObjectToTrack(obj: any): TrackState {
     track.artists.push(a.name);
   });
   return track;
+}
+
+export function findTrack(state: any, id: string): any {
+  let output = null;
+  state.sides.forEach((s: any) => {
+    const index = s.tracks.findIndex((t: any) => t.id === id);
+    if (index >= 0) {
+      output = s.tracks[index];
+    }
+  });
+  return output;
 }
