@@ -50,33 +50,42 @@
           </v-menu>
         </v-col>
       </v-row>
-      <draggable
-        @change="setLock"
-        group="tracks"
-        v-model="tracks"
-        class="list-group"
-        v-bind="dragOptions"
-      >
-        <transition-group type="transition" :name="!drag ? 'flip-list' : null">
-          <v-col
-            style="padding: 2px"
-            class="list-group-item"
-            :key="track.id"
-            v-for="track in tracks"
+      <v-row style="padding: 10px">
+        <Graph v-bind:tracks="tracks" v-bind:sortKey="'energy'"></Graph>
+        <v-divider></v-divider>
+      </v-row>
+      <v-row style="padding: 10px">
+        <draggable
+          @change="setLock"
+          group="tracks"
+          v-model="tracks"
+          class="list-group"
+          v-bind="dragOptions"
+        >
+          <transition-group
+            type="transition"
+            :name="!drag ? 'flip-list' : null"
           >
-            <TrackItem v-bind:track="track"></TrackItem>
-            <v-divider
-              style="margin-right: 10px; margin-left: 10px"
-            ></v-divider>
-          </v-col>
-        </transition-group>
-      </draggable>
-      <v-skeleton-loader
-        v-if="tracks.length === 0"
-        width="500px"
-        type="list-item-avatar-two-line"
-      >
-      </v-skeleton-loader>
+            <v-col
+              style="padding: 2px"
+              class="list-group-item"
+              :key="track.id"
+              v-for="track in tracks"
+            >
+              <TrackItem v-bind:track="track"></TrackItem>
+              <v-divider
+                style="margin-right: 10px; margin-left: 10px"
+              ></v-divider>
+            </v-col>
+          </transition-group>
+        </draggable>
+        <v-skeleton-loader
+          v-if="tracks.length === 0"
+          width="500px"
+          type="list-item-avatar-two-line"
+        >
+        </v-skeleton-loader>
+      </v-row>
     </v-card>
   </div>
 </template>
@@ -85,12 +94,14 @@
 import Vue from "vue";
 import draggable from "vuedraggable";
 import TrackItem from "@/components/TrackItem.vue";
+import Graph from "@/components/Graph.vue";
 
 export default Vue.extend({
   name: "CassetteSide",
   components: {
     draggable,
     TrackItem,
+    Graph,
   },
   props: ["index"],
   data: () => ({
