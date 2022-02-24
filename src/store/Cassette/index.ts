@@ -10,10 +10,12 @@ const initialState: CassetteState = {
     {
       tracks: [],
       total_duration: 0,
+      sorts: [],
     },
     {
       tracks: [],
       total_duration: 0,
+      sorts: [],
     },
   ],
   max_duration: 90 * 60000,

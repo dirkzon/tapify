@@ -9,7 +9,9 @@
             }}
           </v-card-title>
           <v-card-subtitle
-            >{{ String.fromCharCode(97 + index) }}-side</v-card-subtitle
+            >{{
+              String.fromCharCode(97 + this.sideIndex)
+            }}-side</v-card-subtitle
           >
         </v-col>
         <v-col align="right">
@@ -26,6 +28,11 @@
               </v-btn>
             </template>
             <v-list>
+              <v-list-item>
+                <v-btn text small @click="addSort">
+                  <v-icon small>mdi-sort</v-icon> add sorting key
+                </v-btn>
+              </v-list-item>
               <v-list-item>
                 <v-btn text small @click="unhideSide">
                   <v-icon small>mdi-undo</v-icon> unhide tracks
@@ -50,9 +57,20 @@
           </v-menu>
         </v-col>
       </v-row>
-      <v-row style="padding: 10px">
-        <Graph v-bind:tracks="tracks" v-bind:sortKey="'energy'"></Graph>
-        <v-divider></v-divider>
+      <v-row>
+        <v-col>
+          <v-row
+            v-for="(sort, index) in sorts"
+            v-bind:key="index"
+            style="padding: 15px"
+          >
+            <Graph
+              v-bind:sort-index="index"
+              v-bind:side-index="sideIndex"
+              v-bind:sort="sort"
+            ></Graph>
+          </v-row>
+        </v-col>
       </v-row>
       <v-row style="padding: 10px">
         <draggable
@@ -103,7 +121,7 @@ export default Vue.extend({
     TrackItem,
     Graph,
   },
-  props: ["index"],
+  props: ["sideIndex"],
   data: () => ({
     closeOn: true,
     drag: false,
@@ -111,17 +129,17 @@ export default Vue.extend({
   computed: {
     tracks: {
       get() {
-        return this.$store.getters.getCassetteSideTracks(this.index).tracks;
+        return this.$store.getters.getCassetteSideTracks(this.sideIndex).tracks;
       },
       set(value) {
         return this.$store.dispatch("moveTrack", {
-          index: this.index,
+          index: this.sideIndex,
           tracks: value,
         });
       },
     },
     duration() {
-      return this.$store.getters.getCassetteSideDuration(this.index);
+      return this.$store.getters.getCassetteSideDuration(this.sideIndex);
     },
     dragOptions() {
       return {
@@ -129,6 +147,11 @@ export default Vue.extend({
         group: "tracks",
         disabled: false,
       };
+    },
+    sorts: {
+      get() {
+        return this.$store.getters.getCassetteSideSorts(this.sideIndex);
+      },
     },
   },
   methods: {
@@ -154,24 +177,29 @@ export default Vue.extend({
     },
     unlockSide: function () {
       this.$store.dispatch("setSideLock", {
-        index: this.index,
+        index: this.sideIndex,
         locked: false,
       });
     },
     lockSide: function () {
       this.$store.dispatch("setSideLock", {
-        index: this.index,
+        index: this.sideIndex,
         locked: true,
       });
     },
     unhideSide: function () {
       this.$store.dispatch("setSideHidden", {
-        index: this.index,
+        index: this.sideIndex,
         hidden: false,
       });
     },
     deleteSide: function () {
-      this.$store.dispatch("deleteSide", this.index);
+      this.$store.dispatch("deleteSide", this.sideIndex);
+    },
+    addSort: function () {
+      this.$store.dispatch("addSort", {
+        sideIndex: this.sideIndex,
+      });
     },
   },
 });

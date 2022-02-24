@@ -13,8 +13,8 @@ export const mutations: MutationTree<CassetteState> = {
     for (let i = 0; i < state.sides.length; i++) {
       Vue.delete(state.sides, i);
     }
-    Vue.set(state.sides, 0, { ...state.sides[0], tracks: [] });
-    Vue.set(state.sides, 1, { ...state.sides[1], tracks: [] });
+    Vue.set(state.sides, 0, { ...state.sides[0], sorts: [], tracks: [] });
+    Vue.set(state.sides, 1, { ...state.sides[1], sorts: [], tracks: [] });
   },
 
   ADD_TRACKS(state, payload: TrackState[]) {
@@ -79,5 +79,30 @@ export const mutations: MutationTree<CassetteState> = {
     );
     Vue.set(state.sides, 0, { ...state.sides[0], tracks: appendedTracks });
     Vue.delete(state.sides, payload);
+  },
+
+  ADD_SORT(state, payload) {
+    console.log(payload);
+    Vue.set(state.sides, payload.sideIndex, {
+      ...state.sides[payload.sideIndex],
+      sorts: [
+        ...state.sides[payload.sideIndex].sorts,
+        {
+          by: payload.sortKey,
+          direction: "ASC",
+        },
+      ],
+    });
+  },
+
+  DELETE_SORT(state, payload) {
+    Vue.delete(state.sides[payload.sideIndex].sorts, payload.sortIndex);
+  },
+
+  UPDATE_SORT(state, payload) {
+    Vue.set(state.sides[payload.sideIndex].sorts, payload.sortIndex, {
+      by: payload.sort.by,
+      direction: payload.sort.direction,
+    });
   },
 };

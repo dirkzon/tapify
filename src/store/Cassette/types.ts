@@ -6,6 +6,7 @@ export interface CassetteState {
 export interface CassetteSide {
   tracks: TrackState[];
   total_duration: number;
+  sorts: SortState[];
 }
 
 export interface TrackState {
@@ -21,4 +22,17 @@ export interface TrackState {
   liveness?: number;
   tempo?: number;
   energy?: number;
+}
+
+export interface SortState {
+  by: keyof TrackState;
+  direction: "ASC" | "DESC";
+}
+
+export enum SORT_KEY {
+  DANCEABILITY = "danceability",
+  INSTRUMENTALNESS = "instrumentalness",
+  LIVENESS = "liveness",
+  TEMPO = "tempo",
+  ENERGY = "energy",
 }

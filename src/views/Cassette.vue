@@ -29,7 +29,7 @@
       <!--        </v-col>-->
       <v-row>
         <v-col :key="n" v-for="n in sidesCount">
-          <CassetteSide v-bind:index="n - 1"></CassetteSide>
+          <CassetteSide v-bind:sideIndex="n - 1"></CassetteSide>
         </v-col>
       </v-row>
     </v-card>
