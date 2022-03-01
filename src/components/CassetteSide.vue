@@ -50,7 +50,7 @@
               </v-list-item>
               <v-list-item>
                 <v-btn text small @click="deleteSide">
-                  <v-icon small>mdi-delete</v-icon> delete side
+                  <v-icon small>mdi-playlist-remove</v-icon> delete side
                 </v-btn>
               </v-list-item>
             </v-list>
@@ -98,6 +98,7 @@
           </transition-group>
         </draggable>
         <v-skeleton-loader
+          style="margin: 10px"
           v-if="tracks.length === 0"
           width="500px"
           type="list-item-avatar-two-line"
@@ -148,10 +149,8 @@ export default Vue.extend({
         disabled: false,
       };
     },
-    sorts: {
-      get() {
-        return this.$store.getters.getCassetteSideSorts(this.sideIndex);
-      },
+    sorts() {
+      return this.$store.getters.getCassetteSideSorts(this.sideIndex);
     },
   },
   methods: {

@@ -25,7 +25,7 @@ export interface TrackState {
 }
 
 export interface SortState {
-  by: keyof TrackState;
+  by: string;
   direction: "ASC" | "DESC";
 }
 

@@ -1,34 +1,50 @@
 <template>
-  <v-card flat width="100%">
+  <v-card flat width="100%" style="padding: 10px">
     <v-col>
       <v-row>
-        <v-select
-          v-model="sortKey"
-          :items="items"
-          style="width: 200px"
-        ></v-select>
-        <v-btn icon @click="changeDirection">
-          <v-icon v-if="sort.direction === 'ASC'">mdi-sort-ascending</v-icon>
-          <v-icon v-else>mdi-sort-descending</v-icon>
-        </v-btn>
-        <v-btn icon @click="deleteSort">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+        <v-col>
+          <v-select
+            v-model="sortKey"
+            :items="items"
+            style="width: 200px"
+          ></v-select>
+        </v-col>
+
+        <v-col md="1">
+          <v-row>
+            <v-btn
+              icon
+              @click="changeDirection"
+              :title="
+                sort.direction === 'ASC' ? 'sort ascending' : 'sort descending'
+              "
+            >
+              <v-icon v-if="sort.direction === 'ASC'"
+                >mdi-sort-ascending</v-icon
+              >
+              <v-icon v-else>mdi-sort-descending</v-icon>
+            </v-btn>
+          </v-row>
+          <v-row>
+            <v-btn icon @click="deleteSort">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-row>
+        </v-col>
       </v-row>
-      <!--      <v-card-subtitle>{{ this.sort.by }}</v-card-subtitle>-->
       <v-row>
         <v-sparkline
           height="30px"
           :value="graphData"
           :gradient="['#86C6F4']"
           line-width="1.5"
-          smooth="15"
+          smooth="8"
           type="trend"
           auto-draw
         ></v-sparkline>
-        <v-divider></v-divider>
       </v-row>
     </v-col>
+    <v-divider></v-divider>
   </v-card>
 </template>
 

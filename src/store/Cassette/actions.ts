@@ -69,10 +69,7 @@ export const actions: ActionTree<CassetteState, RootState> = {
     { commit, state },
     payload: { index: number; tracks: TrackState[] }
   ) {
-    const sides: TrackState[][] = [];
-    state.sides.forEach((s) => sides.push(s.tracks));
-    sides[payload.index] = payload.tracks;
-    commit("SET_CASSETTE", sides);
+    commit("SET_CASSETTE", payload);
   },
 
   addSide({ commit }) {
