@@ -123,11 +123,13 @@ export const actions: ActionTree<CassetteState, RootState> = {
     });
     if (key) {
       commit("ADD_SORT", { sideIndex: payload.sideIndex, sortKey: key });
+      commit("SORT_TRACKS");
     }
   },
 
   deleteSort({ commit }, payload: { sideIndex: number; sortIndex: number }) {
     commit("DELETE_SORT", payload);
+    commit("SORT_TRACKS");
   },
 
   updateSort(
@@ -139,5 +141,6 @@ export const actions: ActionTree<CassetteState, RootState> = {
     }
   ) {
     commit("UPDATE_SORT", payload);
+    commit("SORT_TRACKS");
   },
 };

@@ -37,7 +37,9 @@ export const mutations: MutationTree<CassetteState> = {
   },
 
   SORT_TRACKS(state) {
-    const sortedSides = sortTracks(state.sides.map((s) => s.tracks));
+    const tracks = state.sides.map((s) => s.tracks);
+    const sorts = state.sides.map((s) => s.sorts);
+    const sortedSides = sortTracks(tracks, sorts);
 
     for (let i = 0; i < sortedSides.length; i++) {
       Vue.set(state.sides, i, { ...state.sides[i], tracks: sortedSides[i] });
