@@ -1,5 +1,5 @@
 import { ActionTree } from "vuex";
-import { CassetteState, TrackState } from "@/store/Cassette/types";
+import { CassetteState, SORT_KEY, TrackState } from "@/store/Cassette/types";
 import { RootState } from "@/store/types";
 import axios from "axios";
 import { mapObjectToTrack } from "@/store/Cassette/service";
@@ -69,10 +69,7 @@ export const actions: ActionTree<CassetteState, RootState> = {
     { commit, state },
     payload: { index: number; tracks: TrackState[] }
   ) {
-    const sides: TrackState[][] = [];
-    state.sides.forEach((s) => sides.push(s.tracks));
-    sides[payload.index] = payload.tracks;
-    commit("SET_CASSETTE", sides);
+    commit("SET_CASSETTE", payload);
   },
 
   addSide({ commit }) {
@@ -105,11 +102,45 @@ export const actions: ActionTree<CassetteState, RootState> = {
     commit("SET_SIDES_DURATION");
   },
 
-  deleteSide({ commit }, payload) {
+  deleteSide({ commit, state }, payload) {
     if (payload > 0) {
+      state.sides[payload].tracks.forEach((t) => {
+        commit("SET_LOCK", { id: t.id, locked: false });
+      });
       commit("DELETE_SIDE", payload);
       commit("SORT_TRACKS");
       commit("SET_SIDES_DURATION");
     }
+  },
+
+  addSort({ commit, state }, payload: { sideIndex: number }) {
+    const sortKeys = state.sides[payload.sideIndex].sorts?.map((s) => s.by);
+    let key = "";
+    Object.values(SORT_KEY).forEach((k: string) => {
+      if (!sortKeys.includes(k as keyof TrackState)) {
+        key = k;
+      }
+    });
+    if (key) {
+      commit("ADD_SORT", { sideIndex: payload.sideIndex, sortKey: key });
+      commit("SORT_TRACKS");
+    }
+  },
+
+  deleteSort({ commit }, payload: { sideIndex: number; sortIndex: number }) {
+    commit("DELETE_SORT", payload);
+    commit("SORT_TRACKS");
+  },
+
+  updateSort(
+    { commit },
+    payload: {
+      sideIndex: number;
+      sortIndex: number;
+      sort: { by: string; direction: string };
+    }
+  ) {
+    commit("UPDATE_SORT", payload);
+    commit("SORT_TRACKS");
   },
 };

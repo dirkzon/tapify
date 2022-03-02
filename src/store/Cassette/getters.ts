@@ -1,5 +1,5 @@
 import { GetterTree } from "vuex";
-import { CassetteState } from "@/store/Cassette/types";
+import { CassetteState, SORT_KEY } from "@/store/Cassette/types";
 import { RootState } from "@/store/types";
 
 export const getters: GetterTree<CassetteState, RootState> = {
@@ -22,4 +22,15 @@ export const getters: GetterTree<CassetteState, RootState> = {
   getMaxDuration(state) {
     return state.max_duration;
   },
+
+  getCassetteSideSorts: (state) => (index: number) => {
+    return state.sides[index].sorts;
+  },
+
+  getCassetteSideSortByKey:
+    (state) => (sideIndex: number, sortKey: SORT_KEY) => {
+      return state.sides[sideIndex].tracks
+        .filter((t) => !t.hidden)
+        .map((t) => t[sortKey]);
+    },
 };

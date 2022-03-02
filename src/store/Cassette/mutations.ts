@@ -13,8 +13,8 @@ export const mutations: MutationTree<CassetteState> = {
     for (let i = 0; i < state.sides.length; i++) {
       Vue.delete(state.sides, i);
     }
-    Vue.set(state.sides, 0, { ...state.sides[0], tracks: [] });
-    Vue.set(state.sides, 1, { ...state.sides[1], tracks: [] });
+    Vue.set(state.sides, 0, { ...state.sides[0], sorts: [], tracks: [] });
+    Vue.set(state.sides, 1, { ...state.sides[1], sorts: [], tracks: [] });
   },
 
   ADD_TRACKS(state, payload: TrackState[]) {
@@ -24,26 +24,25 @@ export const mutations: MutationTree<CassetteState> = {
   ADD_SIDE(state) {
     Vue.set(state.sides, state.sides.length, {
       tracks: [],
+      sorts: [],
       total_duration: 0,
     });
   },
 
   SET_CASSETTE(state, payload) {
-    for (let i = 0; i < state.sides.length; i++) {
-      Vue.set(state.sides, i, { ...state.sides[0], tracks: payload[i] });
-    }
+    Vue.set(state.sides, payload.index, {
+      ...state.sides[payload.index],
+      tracks: payload.tracks,
+    });
   },
 
   SORT_TRACKS(state) {
-    const test: TrackState[][] = [];
-    for (let i = 0; i < state.sides.length; i++) {
-      test.push(state.sides[i].tracks);
-    }
-
-    const sortedSides = sortTracks(test);
+    const tracks = state.sides.map((s) => s.tracks);
+    const sorts = state.sides.map((s) => s.sorts);
+    const sortedSides = sortTracks(tracks, sorts);
 
     for (let i = 0; i < sortedSides.length; i++) {
-      Vue.set(state.sides, i, { ...state.sides[0], tracks: sortedSides[i] });
+      Vue.set(state.sides, i, { ...state.sides[i], tracks: sortedSides[i] });
     }
   },
 
@@ -79,5 +78,29 @@ export const mutations: MutationTree<CassetteState> = {
     );
     Vue.set(state.sides, 0, { ...state.sides[0], tracks: appendedTracks });
     Vue.delete(state.sides, payload);
+  },
+
+  ADD_SORT(state, payload) {
+    Vue.set(state.sides, payload.sideIndex, {
+      ...state.sides[payload.sideIndex],
+      sorts: [
+        ...state.sides[payload.sideIndex].sorts,
+        {
+          by: payload.sortKey,
+          direction: "ASC",
+        },
+      ],
+    });
+  },
+
+  DELETE_SORT(state, payload) {
+    Vue.delete(state.sides[payload.sideIndex].sorts, payload.sortIndex);
+  },
+
+  UPDATE_SORT(state, payload) {
+    Vue.set(state.sides[payload.sideIndex].sorts, payload.sortIndex, {
+      by: payload.sort.by,
+      direction: payload.sort.direction,
+    });
   },
 };
