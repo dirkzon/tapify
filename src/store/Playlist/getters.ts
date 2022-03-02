@@ -30,7 +30,6 @@ export const getters: GetterTree<PlaylistState, RootState> = {
   },
 
   getPlaylistData(state) {
-    console.log(state);
     return state;
   },
 };
