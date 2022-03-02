@@ -6,7 +6,7 @@
           new Date(totalDuration).getSeconds().toString().padStart(2, "0")
         }}
       </v-card-title>
-      <v-btn @click="updatePlaylist">
+      <v-btn @click="updatePlaylist" color="primary">
         <v-icon>mdi-playlist-edit</v-icon> update {{ playlist.name }}
       </v-btn>
     </v-card>
@@ -29,6 +29,7 @@ export default Vue.extend({
   methods: {
     updatePlaylist: function () {
       this.$store.dispatch("updatePlaylist");
+      window.open(this.playlist.url, "_blank");
     },
   },
 });
