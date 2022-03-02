@@ -3,6 +3,7 @@ import { CassetteState, SORT_KEY, TrackState } from "@/store/Cassette/types";
 import { RootState } from "@/store/types";
 import axios from "axios";
 import { mapObjectToTrack } from "@/store/Cassette/service";
+import { mapObjectToPlaylist } from "@/store/Playlist/service";
 
 const { VUE_APP_SPOTIFY_ENDPOINT } = process.env;
 
@@ -24,6 +25,7 @@ export const actions: ActionTree<CassetteState, RootState> = {
       })
       .then(async (response: any) => {
         if (response) {
+          commit("SET_PLAYLIST", mapObjectToPlaylist(response.data));
           const trackBuffer: TrackState[] = [];
           response.data.tracks.items.forEach((item: any) => {
             trackBuffer.push(mapObjectToTrack(item.track));

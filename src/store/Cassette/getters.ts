@@ -1,6 +1,7 @@
 import { GetterTree } from "vuex";
 import { CassetteState, SORT_KEY } from "@/store/Cassette/types";
 import { RootState } from "@/store/types";
+import _ from "lodash";
 
 export const getters: GetterTree<CassetteState, RootState> = {
   getCassetteState(state) {
@@ -13,6 +14,10 @@ export const getters: GetterTree<CassetteState, RootState> = {
 
   getCassetteSideDuration: (state) => (index: number) => {
     return state.sides[index].total_duration;
+  },
+
+  getCassetteTotalDuration(state) {
+    return _.sumBy(state.sides, "total_duration");
   },
 
   countCassetteSides(state) {
